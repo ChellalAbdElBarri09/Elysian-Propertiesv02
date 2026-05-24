@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Elysian Properties</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --navy: #0B132B;
+    --navy-light: #162040;
+    --navy-mid: #1a2a4a;
+    --gold: #D4AF37;
+    --gold-light: #e8cc6a;
+    --gold-dim: rgba(212,175,55,0.15);
+    --bg: #F4F7F6;
+    --bg2: #edf0ef;
+    --white: #ffffff;
+    --ruby: #A61C2C;
+    --ruby-light: rgba(166,28,44,0.12);
+    --emerald: #1E5631;
+    --emerald-light: rgba(30,86,49,0.12);
+    --text: #1a1f2e;
+    --text-muted: #5a6377;
+    --border: rgba(11,19,43,0.08);
+    --shadow: 0 4px 24px rgba(11,19,43,0.10);
+    --shadow-lg: 0 8px 40px rgba(11,19,43,0.16);
+    --radius: 14px;
+    --header-h: 70px;
+    --nav-h: 68px;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%; overflow: hidden;
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  #app-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  }
+  #app-header .brand { display: flex; flex-direction: column; }
+  #app-header .brand-name {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 300; letter-spacing: 2px;
+    color: var(--white); line-height: 1;
+  }
+  #app-header .brand-motto {
+    font-family: var(--serif);
+    font-size: 10px; font-weight: 400; font-style: italic;
+    color: var(--gold); letter-spacing: 3px; text-transform: uppercase;
+    margin-top: 2px;
+  }
+  #app-header .header-actions { display: flex; gap: 10px; }
+  .hdr-btn {
+    background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.3);
+    color: var(--gold); border-radius: 8px; padding: 6px 10px;
+    font-size: 11px; font-family: var(--sans); font-weight: 600;
+    cursor: pointer; letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .hdr-btn:active { background: rgba(212,175,55,0.25); }
+
+  /* ── BOTTOM NAV ──────────────────────────────────── */
+  #bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--white);
+    display: flex; align-items: stretch;
+    border-top: 1px solid var(--border);
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(11,19,43,0.08);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 4px;
+    cursor: pointer; border: none; background: none;
+    font-family: var(--sans); font-size: 10px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 0.3px;
+    transition: color 0.2s; position: relative;
+    padding-bottom: 6px;
+  }
+  .nav-item .nav-icon { font-size: 20px; line-height: 1; }
+  .nav-item.active { color: var(--navy); }
+  .nav-item.active::before {
+    content: ''; position: absolute; top: 0; left: 20%; right: 20%;
+    height: 3px; background: var(--gold); border-radius: 0 0 3px 3px;
+  }
+
+  /* ── MAIN SCROLL AREA ────────────────────────────── */
+  #main-content {
+    position: fixed; top: var(--header-h); bottom: var(--nav-h);
+    left: 0; right: 0; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .page { display: none; padding: 16px 14px 20px; min-height: 100%; }
+  .page.active { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CARDS ───────────────────────────────────────── */
+  .card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 16px;
+    margin-bottom: 14px; border: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: var(--serif); font-size: 17px; font-weight: 600;
+    color: var(--navy); margin-bottom: 12px; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .ct-icon { font-size: 16px; }
+
+  /* ── SECTION LABEL ───────────────────────────────── */
+  .section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-muted);
+    margin: 18px 0 10px; padding-left: 2px;
+  }
+
+  /* ── STAT TILES ──────────────────────────────────── */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .stat-tile {
+    background: var(--white); border-radius: var(--radius);
+    padding: 14px 12px; box-shadow: var(--shadow);
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+  }
+  .stat-tile::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--gold);
+  }
+  .stat-tile.red::before { background: var(--ruby); }
+  .stat-tile.green::before { background: var(--emerald); }
+  .stat-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-value { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--navy); line-height: 1; }
+  .stat-value.red { color: var(--ruby); }
+  .stat-value.green { color: var(--emerald); }
+  .stat-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── MATERIAL COUNTERS ───────────────────────────── */
+  .material-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .material-counter {
+    background: var(--navy); border-radius: var(--radius);
+    padding: 14px 10px; text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .mat-icon { font-size: 22px; margin-bottom: 4px; }
+  .mat-qty {
+    font-family: var(--serif); font-size: 28px; font-weight: 600;
+    color: var(--gold); line-height: 1;
+  }
+  .mat-unit { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: rgba(212,175,55,0.6); text-transform: uppercase; margin-top: 2px; }
+  .mat-name { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px; font-weight: 600; letter-spacing: 0.5px; }
+
+  /* ── FORMS ───────────────────────────────────────── */
+  .form-group { margin-bottom: 12px; }
+  .form-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text-muted);
+    display: block; margin-bottom: 5px;
+  }
+  .form-input, .form-select {
+    width: 100%; padding: 11px 13px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: var(--sans); font-size: 14px; font-weight: 500;
+    color: var(--text); background: var(--bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none; appearance: none;
+  }
+  .form-input:focus, .form-select:focus {
+    border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
+    background: var(--white);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ── BUTTONS ─────────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 20px; border-radius: 10px; border: none;
+    font-family: var(--sans); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; width: 100%;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:active { background: var(--navy-mid); transform: scale(0.98); }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:active { background: var(--gold-light); transform: scale(0.98); }
+  .btn-outline {
+    background: transparent; color: var(--navy);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:active { background: var(--bg2); }
+  .btn-danger { background: var(--ruby-light); color: var(--ruby); border: 1.5px solid rgba(166,28,44,0.2); }
+  .btn-sm { padding: 7px 13px; font-size: 12px; width: auto; border-radius: 8px; }
+
+  /* ── INVOICE LIST ITEM ───────────────────────────── */
+  .list-item {
+    background: var(--white); border-radius: 12px; padding: 13px 14px;
+    margin-bottom: 10px; border: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(11,19,43,0.06);
+    position: relative; overflow: hidden;
+  }
+  .list-item .li-accent {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px; background: var(--gold); border-radius: 12px 0 0 12px;
+  }
+  .list-item.status-paid .li-accent { background: var(--emerald); }
+  .list-item.status-overdue .li-accent { background: var(--ruby); }
+  .li-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 7px; }
+  .li-title { font-weight: 700; font-size: 14px; color: var(--navy); }
+  .li-badge {
+    font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px;
+  }
+  .badge-pending { background: rgba(212,175,55,0.15); color: #8b6914; }
+  .badge-paid { background: var(--emerald-light); color: var(--emerald); }
+  .badge-overdue { background: var(--ruby-light); color: var(--ruby); }
+  .li-meta { display: flex; gap: 14px; font-size: 12px; color: var(--text-muted); }
+  .li-meta span { display: flex; align-items: center; gap: 3px; }
+  .li-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+  /* ── TIMELINE ─────────────────────────────────────── */
+  .timeline-item {
+    position: relative; padding-left: 28px; margin-bottom: 14px;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute; left: 8px; top: 28px; bottom: -14px;
+    width: 2px; background: var(--border);
+  }
+  .timeline-item:last-child::before { display: none; }
+  .tl-dot {
+    position: absolute; left: 0; top: 14px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px;
+  }
+  .tl-dot.done { background: var(--emerald); border-color: var(--emerald); color: white; }
+  .tl-dot.delayed { background: var(--ruby); border-color: var(--ruby); color: white; }
+  .tl-dot.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+  .tl-card {
+    background: var(--white); border-radius: 12px; padding: 13px 14px;
+    border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(11,19,43,0.06);
+  }
+  .tl-card.delayed { border-color: rgba(166,28,44,0.25); background: rgba(166,28,44,0.02); }
+  .tl-head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .tl-name { font-weight: 700; font-size: 14px; color: var(--navy); }
+  .tl-dates { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .delay-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--ruby-light); color: var(--ruby);
+    font-size: 9px; font-weight: 800; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 20px; margin-top: 6px;
+  }
+
+  /* ── CONTRACTOR TASKS ────────────────────────────── */
+  .task-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--white); border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 10px; border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(11,19,43,0.05);
+  }
+  .task-check {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--border); flex-shrink: 0;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: all 0.2s; margin-top: 1px;
+    background: var(--bg);
+  }
+  .task-check.done { background: var(--emerald); border-color: var(--emerald); color: white; }
+  .task-body { flex: 1; }
+  .task-title { font-weight: 600; font-size: 14px; color: var(--navy); }
+  .task-title.done { text-decoration: line-through; color: var(--text-muted); }
+  .task-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; display: flex; gap: 10px; }
+  .pri-high { color: var(--ruby); font-weight: 700; }
+  .pri-medium { color: #c0820a; font-weight: 700; }
+  .pri-low { color: var(--emerald); font-weight: 700; }
+
+  /* ── OPERATIONS LOG ──────────────────────────────── */
+  .op-item {
+    background: var(--white); border-radius: 12px; padding: 13px 14px;
+    margin-bottom: 10px; border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(11,19,43,0.05);
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .op-time-col {
+    min-width: 44px; text-align: center; padding-top: 2px;
+  }
+  .op-time { font-family: var(--serif); font-size: 15px; font-weight: 600; color: var(--navy); line-height: 1; }
+  .op-ampm { font-size: 9px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
+  .op-body { flex: 1; }
+  .op-title { font-weight: 700; font-size: 14px; color: var(--navy); }
+  .op-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .op-urgency {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 20px; margin-left: 6px;
+  }
+  .urgency-critical { background: var(--ruby-light); color: var(--ruby); }
+  .urgency-important { background: rgba(192,130,10,0.12); color: #c0820a; }
+  .urgency-normal { background: var(--emerald-light); color: var(--emerald); }
+  .op-thumb {
+    width: 54px; height: 54px; border-radius: 8px; object-fit: cover;
+    border: 1px solid var(--border);
+  }
+  .op-actions { display: flex; gap: 7px; margin-top: 8px; flex-wrap: wrap; }
+
+  /* ── MINI CALENDAR ───────────────────────────────── */
+  .mini-cal { user-select: none; }
+  .cal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .cal-nav {
+    background: var(--bg); border: none; border-radius: 8px;
+    padding: 6px 10px; font-size: 16px; cursor: pointer; color: var(--navy);
+  }
+  .cal-month { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--navy); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+  .cal-dow {
+    text-align: center; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.5px; color: var(--text-muted); padding: 4px 0;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    text-align: center; padding: 7px 2px; border-radius: 8px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    color: var(--text); transition: background 0.15s;
+    position: relative;
+  }
+  .cal-day:hover { background: var(--bg2); }
+  .cal-day.today { background: var(--navy); color: white; }
+  .cal-day.has-event::after {
+    content: ''; position: absolute; bottom: 2px;
+    left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
+  }
+  .cal-day.today.has-event::after { background: var(--gold); }
+  .cal-day.empty { cursor: default; }
+  .cal-events { margin-top: 12px; }
+  .cal-ev-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; background: var(--bg); border-radius: 8px;
+    margin-bottom: 6px; font-size: 12px; font-weight: 600; color: var(--navy);
+  }
+  .cal-ev-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .cal-ev-dot.inspection { background: var(--ruby); }
+  .cal-ev-dot.investor { background: var(--emerald); }
+
+  /* ── FAB ─────────────────────────────────────────── */
+  #fab {
+    position: fixed; right: 18px; bottom: calc(var(--nav-h) + 16px);
+    z-index: 900;
+  }
+  #fab-btn {
+    width: 58px; height: 58px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy-light), var(--navy));
+    border: 1.5px solid rgba(212,175,55,0.4);
+    color: var(--gold); font-size: 26px; font-weight: 300;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 6px 24px rgba(11,19,43,0.35), 0 0 0 0 rgba(212,175,55,0);
+    transition: box-shadow 0.3s; backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative; z-index: 2;
+  }
+  #fab-btn.long { animation: fabPulse 0.4s ease; }
+  @keyframes fabPulse {
+    0% { box-shadow: 0 6px 24px rgba(11,19,43,0.35), 0 0 0 0 rgba(212,175,55,0.4); }
+    50% { box-shadow: 0 6px 24px rgba(11,19,43,0.35), 0 0 0 16px rgba(212,175,55,0); }
+    100% { box-shadow: 0 6px 24px rgba(11,19,43,0.35), 0 0 0 0 rgba(212,175,55,0); }
+  }
+  #fab-menu {
+    position: absolute; bottom: 68px; right: 0;
+    display: none; flex-direction: column; gap: 10px; align-items: flex-end;
+  }
+  #fab-menu.open { display: flex; animation: fadeUp 0.25s ease; }
+  .fab-item {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; background: transparent; border: none;
+  }
+  .fab-label {
+    background: var(--navy); color: var(--gold);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 6px 12px; border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(11,19,43,0.3);
+  }
+  .fab-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--gold); color: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 3px 14px rgba(212,175,55,0.4);
+  }
+
+  /* ── MODAL ───────────────────────────────────────── */
+  #modal-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(11,19,43,0.6); backdrop-filter: blur(4px);
+    z-index: 2000; align-items: flex-end; padding: 0;
+  }
+  #modal-backdrop.open { display: flex; animation: backdropIn 0.25s ease; }
+  @keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-sheet {
+    background: var(--white); border-radius: 22px 22px 0 0;
+    width: 100%; max-height: 92vh; overflow-y: auto;
+    padding: 20px 18px 36px;
+    animation: sheetUp 0.3s cubic-bezier(0.34,1.4,0.64,1);
+  }
+  @keyframes sheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 40px; height: 4px; background: var(--border);
+    border-radius: 2px; margin: 0 auto 18px;
+  }
+  .modal-title {
+    font-family: var(--serif); font-size: 21px; font-weight: 600;
+    color: var(--navy); margin-bottom: 18px; letter-spacing: 0.5px;
+  }
+
+  /* ── SETUP WIZARD ────────────────────────────────── */
+  #setup-overlay {
+    display: none; position: fixed; inset: 0;
+    background: var(--navy); z-index: 3000;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 30px 24px;
+  }
+  #setup-overlay.open { display: flex; }
+  .setup-brand {
+    text-align: center; margin-bottom: 36px;
+  }
+  .setup-brand-name {
+    font-family: var(--serif); font-size: 32px; font-weight: 300;
+    color: white; letter-spacing: 3px;
+  }
+  .setup-brand-motto {
+    font-family: var(--serif); font-size: 12px; font-style: italic;
+    color: var(--gold); letter-spacing: 4px; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .setup-card {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 20px; padding: 26px 22px; width: 100%; max-width: 400px;
+  }
+  .setup-title {
+    font-family: var(--serif); font-size: 18px; font-weight: 400;
+    color: var(--gold); margin-bottom: 20px; letter-spacing: 0.5px;
+  }
+  .setup-input {
+    width: 100%; padding: 12px 14px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 10px; color: white; font-family: var(--sans);
+    font-size: 14px; outline: none; margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .setup-input:focus { border-color: var(--gold); }
+  .setup-input::placeholder { color: rgba(255,255,255,0.35); }
+  .setup-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(212,175,55,0.7); display: block; margin-bottom: 5px; }
+  .setup-group { margin-bottom: 14px; }
+  .setup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn-setup {
+    width: 100%; padding: 14px; background: var(--gold); color: var(--navy);
+    border: none; border-radius: 12px; font-family: var(--sans);
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    margin-top: 8px; letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-setup:active { background: var(--gold-light); transform: scale(0.98); }
+
+  /* ── PROGRESS BAR ────────────────────────────────── */
+  .progress-bar {
+    height: 6px; background: var(--bg2); border-radius: 3px; overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 3px; transition: width 0.4s ease;
+  }
+
+  /* ── LOADING LINE ────────────────────────────────── */
+  #loading-line {
+    display: none; position: fixed; top: var(--header-h); left: 0; right: 0;
+    z-index: 1500; background: rgba(255,255,255,0.95);
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+  }
+  #loading-line.show { display: block; }
+  .loading-text {
+    font-size: 11px; font-weight: 600; color: var(--navy); margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .loading-track { height: 3px; background: var(--bg2); border-radius: 2px; overflow: hidden; }
+  .loading-runner {
+    height: 100%; width: 0%; background: linear-gradient(90deg, var(--navy), var(--gold));
+    border-radius: 2px; transition: width 0.4s ease;
+  }
+
+  /* ── EMPTY STATE ─────────────────────────────────── */
+  .empty-state {
+    text-align: center; padding: 36px 20px; color: var(--text-muted);
+  }
+  .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+  .empty-text { font-size: 13px; font-weight: 500; }
+
+  /* ── PRINT STYLES ────────────────────────────────── */
+  @media print {
+    body { background: white; overflow: visible !important; }
+    #app-header, #bottom-nav, #fab, #modal-backdrop, #setup-overlay, #loading-line { display: none !important; }
+    #main-content { position: static !important; overflow: visible !important; top: 0 !important; bottom: 0 !important; }
+    .page { display: none !important; }
+    #print-report { display: block !important; }
+    .no-print { display: none !important; }
+  }
+
+  #print-report {
+    display: none;
+    font-family: var(--sans);
+  }
+  .pr-header {
+    text-align: center; border-bottom: 3px solid var(--navy); padding-bottom: 20px; margin-bottom: 24px;
+  }
+  .pr-title { font-family: var(--serif); font-size: 28px; color: var(--navy); font-weight: 300; }
+  .pr-subtitle { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
+  .pr-section { margin-bottom: 22px; }
+  .pr-section-title { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--navy); border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 12px; }
+  .pr-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .pr-table th { background: var(--navy); color: white; padding: 8px 10px; text-align: left; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .pr-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .pr-table tr:nth-child(even) td { background: var(--bg); }
+
+  /* ── TOGGLES & MISC ──────────────────────────────── */
+  .divider { height: 1px; background: var(--border); margin: 14px 0; }
+  .gold-line { height: 2px; background: linear-gradient(90deg, var(--gold), transparent); margin-bottom: 16px; border-radius: 1px; }
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .delete-btn {
+    background: none; border: none; color: var(--ruby);
+    font-size: 14px; cursor: pointer; padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .delete-btn:active { background: var(--ruby-light); }
+  .complete-btn {
+    background: none; border: none; color: var(--emerald);
+    font-size: 14px; cursor: pointer; padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .img-preview {
+    width: 100%; max-height: 160px; object-fit: cover;
+    border-radius: 10px; margin-top: 10px; border: 1px solid var(--border);
+  }
+  input[type=date].form-input { color: var(--text); }
+  select.form-select option { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- SETUP OVERLAY -->
+<div id="setup-overlay">
+  <div class="setup-brand">
+    <div class="setup-brand-name">Elysian Properties</div>
+    <div class="setup-brand-motto">Anchored in Eternity</div>
+  </div>
+  <div class="setup-card">
+    <div class="setup-title">Initialize New Project</div>
+    <div class="setup-group">
+      <label class="setup-label">Project Name</label>
+      <input class="setup-input" id="sw-name" type="text" placeholder="e.g. Al Noor Tower Phase II">
+    </div>
+    <div class="setup-group">
+      <label class="setup-label">Total Allocated Budget</label>
+      <input class="setup-input" id="sw-budget" type="number" step="0.01" min="0" placeholder="0.00">
+    </div>
+    <div class="setup-row">
+      <div class="setup-group">
+        <label class="setup-label">Start Date</label>
+        <input class="setup-input" id="sw-start" type="date">
+      </div>
+      <div class="setup-group">
+        <label class="setup-label">End Date</label>
+        <input class="setup-input" id="sw-end" type="date">
+      </div>
+    </div>
+    <button class="btn-setup" onclick="setupWizardSave()">⚓ Anchor Project</button>
+  </div>
+</div>
+
+<!-- LOADING LINE -->
+<div id="loading-line">
+  <div class="loading-text" id="loading-text">Anchoring data assets into local registry...</div>
+  <div class="loading-track"><div class="loading-runner" id="loading-runner"></div></div>
+</div>
+
+<!-- HEADER -->
+<header id="app-header">
+  <div class="brand">
+    <div class="brand-name">Elysian Properties</div>
+    <div class="brand-motto">Anchored in Eternity</div>
+  </div>
+  <div class="header-actions">
+    <button class="hdr-btn" onclick="exportDB()">⬆ Export</button>
+    <button class="hdr-btn" onclick="triggerImport()">⬇ Import</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importDB(this)">
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="gold-line"></div>
+    <div class="section-label">Financial Overview</div>
+    <div class="stat-grid">
+      <div class="stat-tile">
+        <div class="stat-label">Total Budget</div>
+        <div class="stat-value" id="d-budget">—</div>
+        <div class="stat-sub">Allocated</div>
+      </div>
+      <div class="stat-tile green">
+        <div class="stat-label">Projected Profit</div>
+        <div class="stat-value green" id="d-profit">—</div>
+        <div class="stat-sub">Budget − All Invoices</div>
+      </div>
+      <div class="stat-tile red">
+        <div class="stat-label">Actual Expenses</div>
+        <div class="stat-value red" id="d-expenses">—</div>
+        <div class="stat-sub">Sum of Paid</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">Pending Balance</div>
+        <div class="stat-value" id="d-pending">—</div>
+        <div class="stat-sub">Unpaid Invoices</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="ct-icon">📊</span> Budget Utilization</div>
+      <div class="progress-bar"><div class="progress-fill" id="d-progress" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <span style="font-size:11px;color:var(--text-muted)">0%</span>
+        <span style="font-size:11px;color:var(--navy);font-weight:700" id="d-pct">0%</span>
+        <span style="font-size:11px;color:var(--text-muted)">100%</span>
+      </div>
+    </div>
+
+    <div class="section-label">Material Inventory</div>
+    <div class="material-grid">
+      <div class="material-counter">
+        <div class="mat-icon">🏗️</div>
+        <div class="mat-qty" id="inv-cement">0</div>
+        <div class="mat-unit">bags</div>
+        <div class="mat-name">Cement</div>
+      </div>
+      <div class="material-counter">
+        <div class="mat-icon">⚙️</div>
+        <div class="mat-qty" id="inv-steel">0.0</div>
+        <div class="mat-unit">tons</div>
+        <div class="mat-name">Steel</div>
+      </div>
+      <div class="material-counter">
+        <div class="mat-icon">🧱</div>
+        <div class="mat-qty" id="inv-bricks">0</div>
+        <div class="mat-unit">units</div>
+        <div class="mat-name">Bricks</div>
+      </div>
+    </div>
+
+    <div class="section-label">Project Info</div>
+    <div class="card">
+      <div style="display:grid;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+          <span style="color:var(--text-muted);font-weight:600">Project</span>
+          <span style="font-weight:700;color:var(--navy)" id="d-proj-name">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+          <span style="color:var(--text-muted);font-weight:600">Start Date</span>
+          <span style="font-weight:600;color:var(--navy)" id="d-start">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+          <span style="color:var(--text-muted);font-weight:600">End Date</span>
+          <span style="font-weight:600;color:var(--navy)" id="d-end">—</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-outline no-print" onclick="generateReport()" style="margin-top:4px;">
+      🖨️ Generate PDF Report
+    </button>
+  </div>
+
+  <!-- FINANCIALS -->
+  <div id="page-financials" class="page">
+    <div class="gold-line"></div>
+    <div class="section-label">Add Invoice</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Vendor Name</label>
+        <input class="form-input" id="inv-vendor" type="text" placeholder="e.g. Al Masri Steel Co.">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Total Amount</label>
+          <input class="form-input" id="inv-total" type="number" step="0.01" min="0" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Paid Amount</label>
+          <input class="form-input" id="inv-paid" type="number" step="0.01" min="0" placeholder="0.00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+        <input class="form-input" id="inv-due" type="date">
+      </div>
+      <div class="divider"></div>
+      <div class="section-label" style="margin:0 0 10px">Linked Materials (optional)</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Material</label>
+          <select class="form-select" id="inv-mat-type">
+            <option value="">None</option>
+            <option value="Cement">Cement (Bags)</option>
+            <option value="Steel">Steel (Tons)</option>
+            <option value="Bricks">Bricks (Units)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantity</label>
+          <input class="form-input" id="inv-mat-qty" type="number" min="0" placeholder="0">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addInvoice()">+ Log Invoice</button>
+    </div>
+
+    <div class="section-label">Invoice Ledger</div>
+    <div id="invoice-list"></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div id="page-timeline" class="page">
+    <div class="gold-line"></div>
+    <div class="section-label">Add Milestone</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Stage Name</label>
+        <input class="form-input" id="tl-name" type="text" placeholder="e.g. Structural Framing">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Start Date</label>
+          <input class="form-input" id="tl-start" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Date</label>
+          <input class="form-input" id="tl-end" type="date">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addMilestone()">+ Add Milestone</button>
+    </div>
+
+    <div class="section-label">Project Timeline</div>
+    <div id="timeline-list"></div>
+
+    <div class="card" style="margin-top:6px;">
+      <div class="card-title"><span class="ct-icon">📅</span> Event Calendar</div>
+      <div class="mini-cal">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="calPrev()">‹</button>
+          <div class="cal-month" id="cal-month-label"></div>
+          <button class="cal-nav" onclick="calNext()">›</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-events" id="cal-events"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-label" style="margin:0 0 10px">Log Calendar Event</div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" id="ev-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Event Title</label>
+        <input class="form-input" id="ev-title" type="text" placeholder="e.g. Concrete Pour – Level 3">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="ev-type">
+          <option value="concrete">Concrete Pour</option>
+          <option value="inspection">Municipality Inspection</option>
+          <option value="investor">Investor Review</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="addCalEvent()">+ Log Event</button>
+    </div>
+
+    <div class="section-label">Contractor Tasks</div>
+    <div class="card">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Task Title</label>
+          <input class="form-input" id="ct-title" type="text" placeholder="Task…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="ct-priority">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+        <input class="form-input" id="ct-due" type="date">
+      </div>
+      <button class="btn btn-primary" onclick="addContractorTask()">+ Add Task</button>
+    </div>
+    <div id="contractor-task-list"></div>
+  </div>
+
+  <!-- OPERATIONS -->
+  <div id="page-operations" class="page">
+    <div class="gold-line"></div>
+    <div class="section-label">Log Site Operation</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Operation Title</label>
+        <input class="form-input" id="op-title" type="text" placeholder="e.g. Reinforced concrete pour – Column B7">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Time</label>
+          <input class="form-input" id="op-time" type="time">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="op-priority">
+            <option value="Critical">Critical</option>
+            <option value="Important" selected>Important</option>
+            <option value="Normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" id="op-date" type="date">
+      </div>
+      <button class="btn btn-primary" onclick="addOperation()">+ Log Operation</button>
+    </div>
+
+    <div class="section-label">Today's Operations Log</div>
+    <div id="operations-list"></div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav">
+  <button class="nav-item active" id="nav-dashboard" onclick="switchPage('dashboard')">
+    <span class="nav-icon">🏛️</span>Dashboard
+  </button>
+  <button class="nav-item" id="nav-financials" onclick="switchPage('financials')">
+    <span class="nav-icon">💰</span>Financials
+  </button>
+  <button class="nav-item" id="nav-timeline" onclick="switchPage('timeline')">
+    <span class="nav-icon">📋</span>Timeline
+  </button>
+  <button class="nav-item" id="nav-operations" onclick="switchPage('operations')">
+    <span class="nav-icon">🔧</span>Operations
+  </button>
+</nav>
+
+<!-- FAB -->
+<div id="fab">
+  <div id="fab-menu">
+    <button class="fab-item" onclick="fabAction('invoice')">
+      <span class="fab-label">Log Invoice</span>
+      <span class="fab-circle">🧾</span>
+    </button>
+    <button class="fab-item" onclick="fabAction('task')">
+      <span class="fab-label">Log Task</span>
+      <span class="fab-circle">✅</span>
+    </button>
+    <button class="fab-item" onclick="fabAction('photo')">
+      <span class="fab-label">Snap Photo</span>
+      <span class="fab-circle">📷</span>
+    </button>
+  </div>
+  <div id="fab-btn">+</div>
+</div>
+
+<!-- MODAL BACKDROP -->
+<div id="modal-backdrop">
+  <div class="modal-sheet" id="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- HIDDEN CAMERA INPUT -->
+<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleCameraCapture(this)">
+<input type="file" id="pdf-input" accept="application/pdf" style="display:none" onchange="handlePDFAttach(this)">
+
+<!-- PRINT REPORT -->
+<div id="print-report"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATABASE LAYER – localStorage ORM
+// ═══════════════════════════════════════════════════════
+
+const DB_KEY = 'elysian_db';
+
+const defaultDB = {
+  projects: [],
+  invoices: [],
+  inventory: [],
+  timeline_stages: [],
+  contractor_tasks: [],
+  site_operations: [],
+  calendar_events: []
+};
+
+let DB = JSON.parse(JSON.stringify(defaultDB));
+let _idCounters = { projects:1, invoices:1, inventory:1, timeline_stages:1, contractor_tasks:1, site_operations:1, calendar_events:1 };
+
+function loadDB() {
+  const raw = localStorage.getItem(DB_KEY);
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      DB = parsed.data || JSON.parse(JSON.stringify(defaultDB));
+      _idCounters = parsed.counters || _idCounters;
+    } catch(e) { DB = JSON.parse(JSON.stringify(defaultDB)); }
+  }
+}
+
+function saveDB() {
+  localStorage.setItem(DB_KEY, JSON.stringify({ data: DB, counters: _idCounters }));
+}
+
+function nextId(table) {
+  if (!_idCounters[table]) _idCounters[table] = 1;
+  return _idCounters[table]++;
+}
+
+function dbInsert(table, record) {
+  record.id = nextId(table);
+  record.created_at = new Date().toISOString();
+  DB[table].push(record);
+  saveDB();
+  return record;
+}
+
+function dbDelete(table, id) {
+  DB[table] = DB[table].filter(r => r.id !== id);
+  saveDB();
+}
+
+function dbUpdate(table, id, fields) {
+  const idx = DB[table].findIndex(r => r.id === id);
+  if (idx !== -1) { Object.assign(DB[table][idx], fields); saveDB(); }
+}
+
+function dbAll(table) { return DB[table] || []; }
+
+// ═══════════════════════════════════════════════════════
+//  SETUP WIZARD
+// ═══════════════════════════════════════════════════════
+
+function checkSetup() {
+  if (!DB.projects || DB.projects.length === 0) {
+    document.getElementById('setup-overlay').classList.add('open');
+  } else {
+    renderAll();
+  }
+}
+
+function setupWizardSave() {
+  const name = document.getElementById('sw-name').value.trim();
+  const budget = parseFloat(document.getElementById('sw-budget').value);
+  const start = document.getElementById('sw-start').value;
+  const end = document.getElementById('sw-end').value;
+  if (!name || isNaN(budget) || budget <= 0) {
+    alert('Please enter a project name and a valid budget.');
+    return;
+  }
+  haptic(80);
+  dbInsert('projects', { project_name: name, total_budget: budget, start_date: start, end_date: end });
+  document.getElementById('setup-overlay').classList.remove('open');
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+
+let currentPage = 'dashboard';
+
+function switchPage(page) {
+  haptic(30);
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  currentPage = page;
+  closeFabMenu();
+  if (page === 'timeline') renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════
+//  HAPTIC
+// ═══════════════════════════════════════════════════════
+
+function haptic(ms) {
+  if (navigator.vibrate) navigator.vibrate(ms || 50);
+}
+
+// ═══════════════════════════════════════════════════════
+//  LOADING LINE
+// ═══════════════════════════════════════════════════════
+
+const loadingMessages = [
+  'Anchoring data assets into local registry...',
+  'Compressing site imagery into secure vault...',
+  'Synchronizing ledger entries with project core...',
+  'Calibrating financial metrics...',
+  'Finalizing structural record binding...'
+];
+
+function showLoading(msg) {
+  const ll = document.getElementById('loading-line');
+  const lt = document.getElementById('loading-text');
+  const lr = document.getElementById('loading-runner');
+  lt.textContent = msg || loadingMessages[Math.floor(Math.random()*loadingMessages.length)];
+  lr.style.width = '0%';
+  ll.classList.add('show');
+  let pct = 0;
+  const iv = setInterval(() => {
+    pct = Math.min(pct + Math.random()*25, 90);
+    lr.style.width = pct + '%';
+  }, 180);
+  return { finish: () => {
+    clearInterval(iv);
+    lr.style.width = '100%';
+    setTimeout(() => { ll.classList.remove('show'); lr.style.width='0%'; }, 500);
+  }};
+}
+
+// ═══════════════════════════════════════════════════════
+//  FAB
+// ═══════════════════════════════════════════════════════
+
+let fabPressTimer = null;
+let fabMenuOpen = false;
+
+const fabBtn = document.getElementById('fab-btn');
+const fabMenu = document.getElementById('fab-menu');
+
+fabBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  fabPressTimer = setTimeout(() => {
+    haptic(120);
+    fabBtn.classList.add('long');
+    fabMenu.classList.add('open');
+    fabMenuOpen = true;
+    setTimeout(() => fabBtn.classList.remove('long'), 400);
+  }, 500);
+});
+fabBtn.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  if (fabPressTimer) clearTimeout(fabPressTimer);
+  if (!fabMenuOpen) { toggleFabMenu(); }
+});
+fabBtn.addEventListener('click', (e) => {
+  if (!('ontouchstart' in window)) { toggleFabMenu(); }
+});
+
+function toggleFabMenu() {
+  fabMenuOpen = !fabMenuOpen;
+  fabMenu.classList.toggle('open', fabMenuOpen);
+  fabBtn.textContent = fabMenuOpen ? '×' : '+';
+  if (fabMenuOpen) haptic(40);
+}
+
+function closeFabMenu() {
+  fabMenuOpen = false;
+  fabMenu.classList.remove('open');
+  fabBtn.textContent = '+';
+}
+
+document.getElementById('modal-backdrop').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal-backdrop')) closeModal();
+});
+
+function fabAction(type) {
+  closeFabMenu();
+  haptic(50);
+  if (type === 'invoice') { switchPage('financials'); document.getElementById('inv-vendor').focus(); }
+  else if (type === 'task') { switchPage('timeline'); document.getElementById('ct-title').focus(); }
+  else if (type === 'photo') { triggerCamera(null); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════════
+
+function openModal(title, bodyHTML) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = bodyHTML;
+  document.getElementById('modal-backdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-backdrop').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════
+//  FINANCIALS
+// ═══════════════════════════════════════════════════════
+
+function addInvoice() {
+  const vendor = document.getElementById('inv-vendor').value.trim();
+  const total = parseFloat(document.getElementById('inv-total').value) || 0;
+  const paid = parseFloat(document.getElementById('inv-paid').value) || 0;
+  const due = document.getElementById('inv-due').value;
+  const matType = document.getElementById('inv-mat-type').value;
+  const matQty = parseFloat(document.getElementById('inv-mat-qty').value) || 0;
+
+  if (!vendor || total <= 0) { alert('Please enter a vendor name and total amount.'); return; }
+  if (paid > total) { alert('Paid amount cannot exceed total.'); return; }
+
+  haptic(50);
+  const loader = showLoading();
+  const project = DB.projects[0];
+
+  setTimeout(() => {
+    const remaining = total - paid;
+    const status = remaining <= 0 ? 'Paid' : 'Pending';
+
+    const inv = dbInsert('invoices', {
+      project_id: project.id,
+      vendor_name: vendor,
+      total_amount: total,
+      paid_amount: paid,
+      due_date: due,
+      status: status
+    });
+
+    if (matType && matQty > 0) {
+      const unit = matType === 'Cement' ? 'Bags' : (matType === 'Steel' ? 'Tons' : 'Units');
+      dbInsert('inventory', {
+        project_id: project.id,
+        invoice_id: inv.id,
+        material_name: matType,
+        quantity: matQty,
+        unit: unit,
+        transaction_type: 'Supply'
+      });
+    }
+
+    ['inv-vendor','inv-total','inv-paid','inv-due','inv-mat-qty'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('inv-mat-type').value = '';
+
+    loader.finish();
+    haptic(60);
+    renderAll();
+  }, 600);
+}
+
+function renderInvoiceList() {
+  const list = document.getElementById('invoice-list');
+  const invoices = dbAll('invoices');
+  if (!invoices.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">🧾</div><div class="empty-text">No invoices logged yet</div></div>';
+    return;
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  list.innerHTML = invoices.slice().reverse().map(inv => {
+    const remaining = inv.total_amount - inv.paid_amount;
+    const overdue = inv.due_date && new Date(inv.due_date) < today && inv.status !== 'Paid';
+    const cls = inv.status === 'Paid' ? 'status-paid' : (overdue ? 'status-overdue' : '');
+    const badge = inv.status === 'Paid' ? '<span class="li-badge badge-paid">✓ PAID</span>'
+      : (overdue ? '<span class="li-badge badge-overdue">⚠ OVERDUE</span>'
+      : '<span class="li-badge badge-pending">⏳ PENDING</span>');
+    return `<div class="list-item ${cls}">
+      <div class="li-accent"></div>
+      <div style="padding-left:8px">
+        <div class="li-head">
+          <div class="li-title">${esc(inv.vendor_name)}</div>
+          ${badge}
+        </div>
+        <div class="li-meta">
+          <span>💰 Total: <strong>${fmt(inv.total_amount)}</strong></span>
+          <span>✅ Paid: <strong>${fmt(inv.paid_amount)}</strong></span>
+        </div>
+        <div class="li-meta" style="margin-top:4px">
+          <span>📅 Due: ${inv.due_date || '—'}</span>
+          <span style="color:${remaining>0?'var(--ruby)':'var(--emerald)'}">Balance: <strong>${fmt(remaining)}</strong></span>
+        </div>
+        <div class="li-actions">
+          ${inv.status !== 'Paid' ? `<button class="btn btn-sm btn-outline" onclick="markPaid(${inv.id})">Mark Paid</button>` : ''}
+          <button class="btn btn-sm btn-danger" onclick="deleteInvoice(${inv.id})">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function markPaid(id) {
+  haptic(50);
+  const inv = DB.invoices.find(i => i.id === id);
+  if (inv) { dbUpdate('invoices', id, { paid_amount: inv.total_amount, status: 'Paid' }); renderAll(); }
+}
+
+function deleteInvoice(id) {
+  if (!confirm('Delete this invoice?')) return;
+  haptic(60);
+  DB.inventory = DB.inventory.filter(r => r.invoice_id !== id);
+  dbDelete('invoices', id);
+  saveDB();
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════════
+
+function renderDashboard() {
+  const project = DB.projects[0];
+  if (!project) return;
+
+  const invoices = dbAll('invoices');
+  const budget = project.total_budget;
+  const actualExpenses = invoices.reduce((s,i) => s + (i.paid_amount||0), 0);
+  const totalInvoiced = invoices.reduce((s,i) => s + (i.total_amount||0), 0);
+  const projectedProfit = budget - totalInvoiced;
+  const pendingBalance = invoices.filter(i=>i.status!=='Paid').reduce((s,i)=>s+(i.total_amount-i.paid_amount),0);
+  const pct = Math.min(100, budget > 0 ? Math.round((actualExpenses/budget)*100) : 0);
+
+  document.getElementById('d-budget').textContent = fmt(budget);
+  document.getElementById('d-expenses').textContent = fmt(actualExpenses);
+  document.getElementById('d-profit').textContent = fmt(projectedProfit);
+  document.getElementById('d-pending').textContent = fmt(pendingBalance);
+  document.getElementById('d-progress').style.width = pct + '%';
+  document.getElementById('d-pct').textContent = pct + '%';
+  document.getElementById('d-proj-name').textContent = project.project_name;
+  document.getElementById('d-start').textContent = project.start_date || '—';
+  document.getElementById('d-end').textContent = project.end_date || '—';
+
+  const inventory = dbAll('inventory');
+  const cement = inventory.filter(i=>i.material_name==='Cement'&&i.transaction_type==='Supply').reduce((s,i)=>s+i.quantity,0)
+    - inventory.filter(i=>i.material_name==='Cement'&&i.transaction_type==='Consumption').reduce((s,i)=>s+i.quantity,0);
+  const steel = inventory.filter(i=>i.material_name==='Steel'&&i.transaction_type==='Supply').reduce((s,i)=>s+i.quantity,0)
+    - inventory.filter(i=>i.material_name==='Steel'&&i.transaction_type==='Consumption').reduce((s,i)=>s+i.quantity,0);
+  const bricks = inventory.filter(i=>i.material_name==='Bricks'&&i.transaction_type==='Supply').reduce((s,i)=>s+i.quantity,0)
+    - inventory.filter(i=>i.material_name==='Bricks'&&i.transaction_type==='Consumption').reduce((s,i)=>s+i.quantity,0);
+
+  document.getElementById('inv-cement').textContent = Math.round(cement);
+  document.getElementById('inv-steel').textContent = steel.toFixed(1);
+  document.getElementById('inv-bricks').textContent = Math.round(bricks);
+}
+
+// ═══════════════════════════════════════════════════════
+//  TIMELINE
+// ═══════════════════════════════════════════════════════
+
+function addMilestone() {
+  const name = document.getElementById('tl-name').value.trim();
+  const start = document.getElementById('tl-start').value;
+  const end = document.getElementById('tl-end').value;
+  if (!name || !start || !end) { alert('Please fill in all milestone fields.'); return; }
+  haptic(50);
+  dbInsert('timeline_stages', { project_id: DB.projects[0].id, stage_name: name, start_date: start, end_date: end, is_completed: 0 });
+  document.getElementById('tl-name').value = '';
+  document.getElementById('tl-start').value = '';
+  document.getElementById('tl-end').value = '';
+  renderTimeline();
+}
+
+function renderTimeline() {
+  const list = document.getElementById('timeline-list');
+  const stages = dbAll('timeline_stages').sort((a,b) => a.start_date.localeCompare(b.start_date));
+  if (!stages.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">🏗️</div><div class="empty-text">No milestones added yet</div></div>';
+    return;
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  list.innerHTML = stages.map(s => {
+    const end = new Date(s.end_date);
+    const delayed = !s.is_completed && end < today;
+    const done = s.is_completed;
+    const dotClass = done ? 'done' : (delayed ? 'delayed' : 'active');
+    const dotIcon = done ? '✓' : (delayed ? '!' : '▷');
+    return `<div class="timeline-item">
+      <div class="tl-dot ${dotClass}">${dotIcon}</div>
+      <div class="tl-card ${delayed?'delayed':''}">
+        <div class="tl-head">
+          <div class="tl-name">${esc(s.stage_name)}</div>
+          <div style="display:flex;gap:6px">
+            ${!done ? `<button class="complete-btn" title="Mark complete" onclick="completeMilestone(${s.id})">✓</button>` : ''}
+            <button class="delete-btn" onclick="deleteMilestone(${s.id})">🗑</button>
+          </div>
+        </div>
+        <div class="tl-dates">📅 ${s.start_date} → ${s.end_date}</div>
+        ${delayed ? `<div class="delay-badge">⚠ DELAYED — ${daysBehind(s.end_date, today)}d overdue</div>` : ''}
+        ${done ? `<div style="margin-top:6px"><span class="chip" style="background:var(--emerald-light);color:var(--emerald)">✓ Completed</span></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function daysBehind(endDate, today) {
+  const end = new Date(endDate);
+  return Math.round((today - end) / (1000*60*60*24));
+}
+
+function completeMilestone(id) {
+  haptic(60);
+  dbUpdate('timeline_stages', id, { is_completed: 1 });
+  renderTimeline();
+}
+
+function deleteMilestone(id) {
+  if (!confirm('Delete this milestone?')) return;
+  haptic(50);
+  dbDelete('timeline_stages', id);
+  renderTimeline();
+}
+
+// ═══════════════════════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════════════════════
+
+let calYear, calMonth;
+
+function initCal() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function calPrev() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function calNext() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = months[calMonth] + ' ' + calYear;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date();
+  const todayStr = today.getFullYear()+'-'+pad(today.getMonth()+1)+'-'+pad(today.getDate());
+
+  const events = dbAll('calendar_events');
+  const eventDays = {};
+  events.forEach(ev => {
+    if (ev.date && ev.date.startsWith(`${calYear}-${pad(calMonth+1)}`)) {
+      const d = parseInt(ev.date.split('-')[2]);
+      eventDays[d] = ev.type;
+    }
+  });
+
+  const grid = document.getElementById('cal-grid');
+  let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  for (let i=0; i<firstDay; i++) html += `<div class="cal-day empty"></div>`;
+  for (let d=1; d<=daysInMonth; d++) {
+    const ds = `${calYear}-${pad(calMonth+1)}-${pad(d)}`;
+    const isToday = ds === todayStr;
+    const hasEv = eventDays[d] !== undefined;
+    html += `<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}" onclick="showDayEvents('${ds}')">${d}</div>`;
+  }
+  grid.innerHTML = html;
+
+  const evBox = document.getElementById('cal-events');
+  const todayEvs = events.filter(ev => ev.date === todayStr);
+  if (todayEvs.length) {
+    evBox.innerHTML = '<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">Today\'s Events</div>'
+      + todayEvs.map(ev=>`<div class="cal-ev-item"><div class="cal-ev-dot ${ev.type}"></div>${esc(ev.title)} <button class="delete-btn" style="margin-left:auto;font-size:12px" onclick="deleteCalEvent(${ev.id})">🗑</button></div>`).join('');
+  } else { evBox.innerHTML = ''; }
+}
+
+function showDayEvents(dateStr) {
+  const events = dbAll('calendar_events').filter(ev=>ev.date===dateStr);
+  if (!events.length) { document.getElementById('ev-date').value=dateStr; return; }
+  const html = events.map(ev=>`<div class="cal-ev-item" style="background:var(--bg2)"><div class="cal-ev-dot ${ev.type}"></div><span>${esc(ev.title)}</span><button class="delete-btn" style="margin-left:auto" onclick="deleteCalEvent(${ev.id});closeModal()">🗑</button></div>`).join('');
+  openModal('Events: ' + dateStr, html);
+}
+
+function addCalEvent() {
+  const date = document.getElementById('ev-date').value;
+  const title = document.getElementById('ev-title').value.trim();
+  const type = document.getElementById('ev-type').value;
+  if (!date || !title) { alert('Please fill in date and title.'); return; }
+  haptic(50);
+  dbInsert('calendar_events', { date, title, type });
+  document.getElementById('ev-date').value='';
+  document.getElementById('ev-title').value='';
+  renderCalendar();
+}
+
+function deleteCalEvent(id) {
+  haptic(40);
+  dbDelete('calendar_events', id);
+  renderCalendar();
+  closeModal();
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONTRACTOR TASKS
+// ═══════════════════════════════════════════════════════
+
+function addContractorTask() {
+  const title = document.getElementById('ct-title').value.trim();
+  const priority = document.getElementById('ct-priority').value;
+  const due = document.getElementById('ct-due').value;
+  if (!title) { alert('Please enter a task title.'); return; }
+  haptic(50);
+  dbInsert('contractor_tasks', { project_id: DB.projects[0].id, task_title: title, priority, due_date: due, is_done: 0 });
+  document.getElementById('ct-title').value='';
+  document.getElementById('ct-due').value='';
+  renderContractorTasks();
+}
+
+function renderContractorTasks() {
+  const list = document.getElementById('contractor-task-list');
+  const tasks = dbAll('contractor_tasks').slice().reverse();
+  if (!tasks.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No contractor tasks yet</div></div>';
+    return;
+  }
+  list.innerHTML = tasks.map(t => {
+    const priClass = t.priority==='High'?'pri-high':t.priority==='Low'?'pri-low':'pri-medium';
+    return `<div class="task-item">
+      <div class="task-check ${t.is_done?'done':''}" onclick="toggleTask(${t.id})">${t.is_done?'✓':''}</div>
+      <div class="task-body">
+        <div class="task-title ${t.is_done?'done':''}">${esc(t.task_title)}</div>
+        <div class="task-meta">
+          <span class="${priClass}">${t.priority}</span>
+          ${t.due_date?`<span>📅 ${t.due_date}</span>`:''}
+        </div>
+      </div>
+      <button class="delete-btn" onclick="deleteTask(${t.id})">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleTask(id) {
+  haptic(40);
+  const t = DB.contractor_tasks.find(t=>t.id===id);
+  if (t) { dbUpdate('contractor_tasks', id, { is_done: t.is_done ? 0 : 1 }); renderContractorTasks(); }
+}
+
+function deleteTask(id) {
+  haptic(40);
+  dbDelete('contractor_tasks', id);
+  renderContractorTasks();
+}
+
+// ═══════════════════════════════════════════════════════
+//  SITE OPERATIONS
+// ═══════════════════════════════════════════════════════
+
+let pendingCameraOpId = null;
+let pendingPDFOpId = null;
+
+function addOperation() {
+  const title = document.getElementById('op-title').value.trim();
+  const time = document.getElementById('op-time').value;
+  const priority = document.getElementById('op-priority').value;
+  const date = document.getElementById('op-date').value || new Date().toISOString().split('T')[0];
+  if (!title || !time) { alert('Please enter title and time.'); return; }
+  haptic(50);
+  const loader = showLoading('Anchoring operation into site log...');
+  setTimeout(() => {
+    dbInsert('site_operations', { project_id: DB.projects[0].id, operation_title: title, operation_time: time, priority, status: 'Not Started', log_date: date });
+    document.getElementById('op-title').value='';
+    document.getElementById('op-time').value='';
+    loader.finish();
+    haptic(60);
+    renderOperations();
+  }, 500);
+}
+
+function renderOperations() {
+  const list = document.getElementById('operations-list');
+  const ops = dbAll('site_operations').sort((a,b)=>a.operation_time.localeCompare(b.operation_time));
+  if (!ops.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">🔧</div><div class="empty-text">No operations logged today</div></div>';
+    return;
+  }
+  list.innerHTML = ops.slice().reverse().map(op => {
+    const [h,m] = op.operation_time.split(':');
+    const hh = parseInt(h);
+    const ampm = hh>=12?'PM':'AM';
+    const h12 = ((hh%12)||12);
+    const urgCls = op.priority==='Critical'?'urgency-critical':op.priority==='Important'?'urgency-important':'urgency-normal';
+    const urgDot = op.priority==='Critical'?'🔴':op.priority==='Important'?'🟡':'🟢';
+    return `<div class="op-item">
+      <div class="op-time-col">
+        <div class="op-time">${h12}:${m}</div>
+        <div class="op-ampm">${ampm}</div>
+      </div>
+      <div class="op-body">
+        <div style="display:flex;align-items:center">
+          <div class="op-title">${esc(op.operation_title)}</div>
+          <span class="op-urgency ${urgCls}">${urgDot} ${op.priority}</span>
+        </div>
+        <div class="op-meta">📅 ${op.log_date}</div>
+        ${op.image_base64 ? `<img src="${op.image_base64}" class="img-preview" alt="site photo">` : ''}
+        ${op.pdf_base64 ? `<div style="font-size:11px;margin-top:6px;color:var(--emerald);font-weight:600">📎 Blueprint attached</div>` : ''}
+        <div class="op-actions">
+          <button class="btn btn-sm btn-outline" onclick="triggerCamera(${op.id})">📷 Photo</button>
+          <button class="btn btn-sm btn-outline" onclick="triggerPDF(${op.id})">📎 PDF</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteOp(${op.id})">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function triggerCamera(opId) {
+  pendingCameraOpId = opId;
+  document.getElementById('camera-input').click();
+}
+
+function handleCameraCapture(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const loader = showLoading('Compressing site imagery into secure vault...');
+  haptic(30);
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const base64 = e.target.result;
+    if (pendingCameraOpId) {
+      dbUpdate('site_operations', pendingCameraOpId, { image_base64: base64 });
+      pendingCameraOpId = null;
+    } else {
+      const title = 'Site Photo — ' + new Date().toLocaleTimeString();
+      const now = new Date();
+      const time = pad(now.getHours()) + ':' + pad(now.getMinutes());
+      const date = now.toISOString().split('T')[0];
+      dbInsert('site_operations', { project_id: DB.projects[0].id, operation_title: title, operation_time: time, priority: 'Normal', status: 'Not Started', log_date: date, image_base64: base64 });
+    }
+    loader.finish();
+    haptic(60);
+    input.value = '';
+    renderOperations();
+  };
+  reader.readAsDataURL(file);
+}
+
+function triggerPDF(opId) {
+  pendingPDFOpId = opId;
+  document.getElementById('pdf-input').click();
+}
+
+function handlePDFAttach(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const loader = showLoading('Indexing architectural blueprint to site record...');
+  haptic(30);
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const base64 = e.target.result;
+    if (pendingPDFOpId) {
+      dbUpdate('site_operations', pendingPDFOpId, { pdf_base64: base64 });
+      pendingPDFOpId = null;
+    }
+    loader.finish();
+    haptic(50);
+    input.value = '';
+    renderOperations();
+  };
+  reader.readAsDataURL(file);
+}
+
+function deleteOp(id) {
+  haptic(40);
+  dbDelete('site_operations', id);
+  renderOperations();
+}
+
+// ═══════════════════════════════════════════════════════
+//  PDF REPORT
+// ═══════════════════════════════════════════════════════
+
+function generateReport() {
+  haptic(80);
+  const project = DB.projects[0];
+  if (!project) return;
+  const invoices = dbAll('invoices');
+  const ops = dbAll('site_operations');
+  const stages = dbAll('timeline_stages');
+  const budget = project.total_budget;
+  const actualExp = invoices.reduce((s,i)=>s+(i.paid_amount||0),0);
+  const totalInv = invoices.reduce((s,i)=>s+(i.total_amount||0),0);
+  const profit = budget - totalInv;
+  const today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  const report = document.getElementById('print-report');
+  report.innerHTML = `
+    <div class="pr-header">
+      <div class="pr-title">Elysian Properties</div>
+      <div class="pr-subtitle">Anchored in Eternity — Site Status Report</div>
+      <div style="font-size:12px;color:#666;margin-top:8px">${project.project_name} &nbsp;|&nbsp; Generated: ${today}</div>
+    </div>
+    <div class="pr-section">
+      <div class="pr-section-title">Financial Summary</div>
+      <table class="pr-table">
+        <tr><th>Metric</th><th>Value</th></tr>
+        <tr><td>Total Budget</td><td>${fmt(budget)}</td></tr>
+        <tr><td>Actual Expenses (Paid)</td><td>${fmt(actualExp)}</td></tr>
+        <tr><td>Total Invoiced</td><td>${fmt(totalInv)}</td></tr>
+        <tr><td>Projected Net Profit</td><td>${fmt(profit)}</td></tr>
+      </table>
+    </div>
+    <div class="pr-section">
+      <div class="pr-section-title">Invoice Ledger</div>
+      <table class="pr-table">
+        <tr><th>Vendor</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th>Due</th></tr>
+        ${invoices.map(i=>`<tr><td>${esc(i.vendor_name)}</td><td>${fmt(i.total_amount)}</td><td>${fmt(i.paid_amount)}</td><td>${fmt(i.total_amount-i.paid_amount)}</td><td>${i.status}</td><td>${i.due_date||'—'}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="pr-section">
+      <div class="pr-section-title">Timeline Milestones</div>
+      <table class="pr-table">
+        <tr><th>Stage</th><th>Start</th><th>End</th><th>Status</th></tr>
+        ${stages.map(s=>`<tr><td>${esc(s.stage_name)}</td><td>${s.start_date}</td><td>${s.end_date}</td><td>${s.is_completed?'Completed':'In Progress'}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="pr-section">
+      <div class="pr-section-title">Site Operations Log</div>
+      <table class="pr-table">
+        <tr><th>Operation</th><th>Time</th><th>Date</th><th>Priority</th><th>Status</th></tr>
+        ${ops.map(o=>`<tr><td>${esc(o.operation_title)}</td><td>${o.operation_time}</td><td>${o.log_date}</td><td>${o.priority}</td><td>${o.status}</td></tr>`).join('')}
+      </table>
+    </div>
+    ${ops.filter(o=>o.image_base64).length ? `<div class="pr-section">
+      <div class="pr-section-title">Site Photographs</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        ${ops.filter(o=>o.image_base64).map(o=>`<div style="text-align:center"><img src="${o.image_base64}" style="max-width:220px;max-height:160px;border-radius:6px;border:1px solid #ddd"><div style="font-size:10px;color:#666;margin-top:4px">${esc(o.operation_title)}</div></div>`).join('')}
+      </div>
+    </div>` : ''}
+  `;
+  window.print();
+}
+
+// ═══════════════════════════════════════════════════════
+//  IMPORT / EXPORT
+// ═══════════════════════════════════════════════════════
+
+function exportDB() {
+  haptic(50);
+  const data = JSON.stringify({ data: DB, counters: _idCounters }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'elysian_backup_' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport() {
+  document.getElementById('import-file').click();
+}
+
+function importDB(input) {
+  if (!input.files || !input.files[0]) return;
+  const loader = showLoading('Restoring project vault from backup...');
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      DB = parsed.data;
+      _idCounters = parsed.counters;
+      saveDB();
+      loader.finish();
+      haptic(80);
+      renderAll();
+      alert('Database imported successfully.');
+    } catch(err) { loader.finish(); alert('Invalid backup file.'); }
+  };
+  reader.readAsText(input.files[0]);
+  input.value = '';
+}
+
+// ═══════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════
+
+function fmt(n) {
+  if (isNaN(n)) return '—';
+  return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(n);
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+// ═══════════════════════════════════════════════════════
+//  RENDER ALL
+// ═══════════════════════════════════════════════════════
+
+function renderAll() {
+  renderDashboard();
+  renderInvoiceList();
+  renderTimeline();
+  renderContractorTasks();
+  renderOperations();
+  if (currentPage === 'timeline') renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+
+loadDB();
+initCal();
+checkSetup();
+renderCalendar();
+
+// Set today's date defaults
+const todayISO = new Date().toISOString().split('T')[0];
+document.getElementById('inv-due').value = todayISO;
+document.getElementById('op-date').value = todayISO;
+document.getElementById('ev-date').value = todayISO;
+
+</script>
+</body>
+</html>
